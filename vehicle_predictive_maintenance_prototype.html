@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vehicle Health Assistant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body { font-family: Arial, sans-serif; background: #f4f7fb; margin: 0; }
+header { background: #1e3a8a; color: white; padding: 15px; text-align: center; font-size: 22px; }
+.container { padding: 20px; }
+.card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+.card h3 { margin-top: 0; color: #1e3a8a; }
+.health-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.health-box { padding: 15px; border-radius: 10px; text-align: center; font-weight: bold; }
+.good { background: #dcfce7; color: #166534; }
+.warn { background: #fef3c7; color: #92400e; }
+button { background: #2563eb; color: white; border: none; padding: 12px;
+         border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; }
+button:hover { background: #1d4ed8; }
+.assistant { background: #eff6ff; border-left: 5px solid #2563eb;
+             padding: 12px; border-radius: 8px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; }
+th { background: #f1f5f9; }
+</style>
+</head>
+
+<body>
+<header>🚘 Vehicle Predictive Maintenance Assistant</header>
+
+<div class="container">
+
+<div class="card">
+<h3>Vehicle Health Overview</h3>
+<div class="health-grid">
+<div id="engine" class="health-box warn">Engine<br>⚠ Warning</div>
+<div class="health-box good">Battery<br>✔ Good</div>
+<div class="health-box good">Brakes<br>✔ Good</div>
+</div>
+</div>
+
+<div class="card">
+<h3>Monthly Vehicle Health Trend</h3>
+<canvas id="healthChart"></canvas>
+</div>
+
+<div class="card">
+<h3>AI Assistant</h3>
+<div class="assistant" id="assistantText">
+<p><b>Issue:</b> Engine sensor anomaly detected.</p>
+<p><b>Recommendation:</b> Book service within 3 days.</p>
+</div><br>
+<button onclick="bookService()">Book Service Now</button>
+</div>
+
+<div class="card">
+<h3>Service History</h3>
+<table id="historyTable">
+<tr><th>Date</th><th>Issue</th><th>Status</th></tr>
+<tr><td>12 Aug 2025</td><td>Battery Replacement</td><td>Completed</td></tr>
+</table>
+</div>
+
+</div>
+
+<script>
+const ctx = document.getElementById('healthChart').getContext('2d');
+let healthData = [65, 68, 70, 72, 75, 75];
+
+const healthChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+            label: 'Vehicle Health %',
+            data: healthData,
+            borderWidth: 3,
+            tension: 0.3
+        }]
+    },
+    options: {
+        scales: { y: { min: 50, max: 100 } }
+    }
+});
+
+function bookService() {
+    document.getElementById("assistantText").innerHTML =
+        "<p>✅ <b>Service Booked!</b></p><p>Engine health improving.</p>";
+    const engine = document.getElementById("engine");
+    engine.className = "health-box good";
+    engine.innerHTML = "Engine<br>✔ Good";
+    healthData.push(90);
+    healthChart.data.labels.push("Jul");
+    healthChart.update();
+    const table = document.getElementById("historyTable");
+    const row = table.insertRow(1);
+    row.insertCell(0).innerText = new Date().toLocaleDateString();
+    row.insertCell(1).innerText = "Engine Sensor Service";
+    row.insertCell(2).innerText = "Scheduled";
+}
+</script>
+</body>
+</html>
